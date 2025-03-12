@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package com.hedera.node.app.service.contract.impl.test.exec.systemcontracts;
 
-import static com.hedera.node.app.service.contract.impl.exec.systemcontracts.HasSystemContract.HAS_CONTRACT_ID;
 import static com.hedera.node.app.service.contract.impl.exec.systemcontracts.HtsSystemContract.HTS_167_CONTRACT_ID;
 import static com.hedera.node.app.service.contract.impl.test.TestHelpers.DEFAULT_CONFIG;
 import static com.hedera.node.app.service.contract.impl.test.TestHelpers.NON_SYSTEM_LONG_ZERO_ADDRESS;
@@ -11,14 +10,12 @@ import com.hedera.hapi.node.base.ContractID;
 import com.hedera.node.app.service.contract.impl.exec.gas.SystemContractGasCalculator;
 import com.hedera.node.app.service.contract.impl.exec.scope.VerificationStrategies;
 import com.hedera.node.app.service.contract.impl.exec.systemcontracts.common.CallTranslator;
-import com.hedera.node.app.service.contract.impl.exec.systemcontracts.has.HasCallAttempt;
 import com.hedera.node.app.service.contract.impl.exec.systemcontracts.hts.AddressIdConverter;
 import com.hedera.node.app.service.contract.impl.exec.systemcontracts.hts.HtsCallAttempt;
 import com.hedera.node.app.service.contract.impl.exec.utils.SystemContractMethod;
 import com.hedera.node.app.service.contract.impl.exec.utils.SystemContractMethodRegistry;
 import com.hedera.node.app.service.contract.impl.hevm.HederaWorldUpdater;
 import com.hedera.node.app.service.contract.impl.test.TestHelpers;
-import com.hedera.node.app.spi.signatures.SignatureVerifier;
 import com.swirlds.config.api.Configuration;
 import java.util.List;
 import org.apache.tuweni.bytes.Bytes;
@@ -155,135 +152,6 @@ public final class CallAttemptHelpers {
                 config,
                 addressIdConverter,
                 verificationStrategies,
-                gasCalculator,
-                List.of(translator),
-                systemContractMethodRegistry,
-                false);
-    }
-
-    /**
-     * @param systemContractMethod the selector to match against (as a `SystemContractMethod`)
-     * @param translator the translator for this specific call attempt
-     * @param enhancement the enhancement that is used
-     * @param addressIdConverter the address ID converter for this call
-     * @param verificationStrategies the verification strategy currently used
-     * @param signatureVerifier a function that verifies a signature
-     * @param gasCalculator the gas calculator used for the system contract
-     * @return the call attempt
-     */
-    public static HasCallAttempt prepareHasAttemptWithSelector(
-            final SystemContractMethod systemContractMethod,
-            final CallTranslator<HasCallAttempt> translator,
-            final HederaWorldUpdater.Enhancement enhancement,
-            final AddressIdConverter addressIdConverter,
-            final VerificationStrategies verificationStrategies,
-            final SignatureVerifier signatureVerifier,
-            final SystemContractGasCalculator gasCalculator,
-            final SystemContractMethodRegistry systemContractMethodRegistry) {
-        return prepareHasAttemptWithSelectorAndCustomConfig(
-                systemContractMethod,
-                translator,
-                enhancement,
-                addressIdConverter,
-                verificationStrategies,
-                signatureVerifier,
-                gasCalculator,
-                systemContractMethodRegistry,
-                DEFAULT_CONFIG);
-    }
-
-    /**
-     * @param systemContractMethod the selector to match against (as a `SystemContractMethod`)
-     * @param translator the translator for this specific call attempt
-     * @param enhancement the enhancement that is used
-     * @param addressIdConverter the address ID converter for this call
-     * @param verificationStrategies the verification strategy currently used
-     * @param signatureVerifier a function that verifies a signature
-     * @param gasCalculator the gas calculator used for the system contract
-     * @param config the configuration being used
-     * @return the call attempt
-     */
-    public static HasCallAttempt prepareHasAttemptWithSelectorAndCustomConfig(
-            final SystemContractMethod systemContractMethod,
-            final CallTranslator<HasCallAttempt> translator,
-            final HederaWorldUpdater.Enhancement enhancement,
-            final AddressIdConverter addressIdConverter,
-            final VerificationStrategies verificationStrategies,
-            final SignatureVerifier signatureVerifier,
-            final SystemContractGasCalculator gasCalculator,
-            final SystemContractMethodRegistry systemContractMethodRegistry,
-            final Configuration config) {
-        return prepareHasAttemptWithSelectorAndInputAndCustomConfig(
-                systemContractMethod,
-                TestHelpers.bytesForRedirectAccount(systemContractMethod.selector(), NON_SYSTEM_LONG_ZERO_ADDRESS),
-                translator,
-                enhancement,
-                addressIdConverter,
-                verificationStrategies,
-                signatureVerifier,
-                gasCalculator,
-                systemContractMethodRegistry,
-                config);
-    }
-
-    /**
-     * @param input the input in bytes
-     * @param translator the translator for this specific call attempt
-     * @param enhancement the enhancement that is used
-     * @param addressIdConverter the address ID converter for this call
-     * @param verificationStrategies the verification strategy currently used
-     * @param signatureVerifier a function that verifies a signature
-     * @param gasCalculator the gas calculator used for the system contract
-     * @param config the configuration being used
-     * @return the call attempt
-     */
-    public static HasCallAttempt prepareHasAttemptWithSelectorAndInputAndCustomConfig(
-            final Bytes input,
-            final CallTranslator<HasCallAttempt> translator,
-            final HederaWorldUpdater.Enhancement enhancement,
-            final AddressIdConverter addressIdConverter,
-            final VerificationStrategies verificationStrategies,
-            final SignatureVerifier signatureVerifier,
-            final SystemContractGasCalculator gasCalculator,
-            final SystemContractMethodRegistry systemContractMethodRegistry,
-            final Configuration config) {
-        return new HasCallAttempt(
-                HAS_CONTRACT_ID,
-                input,
-                OWNER_BESU_ADDRESS,
-                false,
-                enhancement,
-                config,
-                addressIdConverter,
-                verificationStrategies,
-                signatureVerifier,
-                gasCalculator,
-                List.of(translator),
-                systemContractMethodRegistry,
-                false);
-    }
-
-    public static HasCallAttempt prepareHasAttemptWithSelectorAndInputAndCustomConfig(
-            final SystemContractMethod systemContractMethod,
-            final Bytes input,
-            final CallTranslator<HasCallAttempt> translator,
-            final HederaWorldUpdater.Enhancement enhancement,
-            final AddressIdConverter addressIdConverter,
-            final VerificationStrategies verificationStrategies,
-            final SignatureVerifier signatureVerifier,
-            final SystemContractGasCalculator gasCalculator,
-            final SystemContractMethodRegistry systemContractMethodRegistry,
-            final Configuration config) {
-        return new HasCallAttempt(
-                HAS_CONTRACT_ID,
-                input,
-                OWNER_BESU_ADDRESS,
-                false,
-                enhancement,
-                config,
-                addressIdConverter,
-                verificationStrategies,
-                signatureVerifier,
                 gasCalculator,
                 List.of(translator),
                 systemContractMethodRegistry,

@@ -108,14 +108,11 @@ class ScheduleNativeTranslatorTest extends CallAttemptTestBase {
     void calculatesGasRequirementCorrectly() {
         // given
         final var expectedGas = 1234L;
-
         given(gasCalculator.gasRequirement(transactionBody, DispatchType.SCHEDULE_CREATE, payerId))
                 .willReturn(expectedGas);
-
         // when
         final var actualGas =
                 ScheduleNativeTranslator.gasRequirement(transactionBody, gasCalculator, mockEnhancement(), payerId);
-
         // then
         assertEquals(expectedGas, actualGas);
     }
@@ -138,10 +135,8 @@ class ScheduleNativeTranslatorTest extends CallAttemptTestBase {
         given(attempt.keySetFor()).willReturn(Set.of());
         given(attempt.systemContractID()).willReturn(HTS_167_CONTRACT_ID);
         given(addressIdConverter.convert(any())).willReturn(SENDER_ID);
-
         // when
         final var call = subject.callFrom(attempt);
-
         // then
         assertNotNull(call);
         assertInstanceOf(ScheduleNativeCall.class, call);
