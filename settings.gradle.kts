@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
+pluginManagement { includeBuild("../hiero-gradle-conventions") }
+
 plugins { id("org.hiero.gradle.build") version "0.3.6" }
 
 // Downgrade 'dependency-analysis-gradle-plugin' as 2.8.0 delivers unexpected results

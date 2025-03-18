@@ -16,7 +16,7 @@ dependencies {
 }
 
 val autoService = "1.1.1"
-val besu = "24.3.3"
+val besu = "24.12.2"
 val bouncycastle = "1.80"
 val dagger = "2.55"
 val eclipseCollections = "11.1.0"
@@ -109,9 +109,6 @@ dependencies.constraints {
     }
     api("org.hyperledger.besu:besu-datatypes:$besu") { because("org.hyperledger.besu.datatypes") }
     api("org.hyperledger.besu:evm:$besu") { because("org.hyperledger.besu.evm") }
-    api("org.hyperledger.besu:secp256k1:0.8.2") {
-        because("org.hyperledger.besu.nativelib.secp256k1")
-    }
     api("org.jetbrains:annotations:26.0.2") { because("org.jetbrains.annotations") }
     api("org.json:json:20250107") { because("org.json") }
     api("org.junit.jupiter:junit-jupiter-api:$junit5") { because("org.junit.jupiter.api") }
