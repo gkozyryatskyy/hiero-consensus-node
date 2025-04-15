@@ -103,6 +103,7 @@ public interface TransactionModule {
         return requireNonNull(context).consensusNow();
     }
 
+    //TODO Glib: source for fees
     @Provides
     @TransactionScope
     @TopLevelResourcePrices
@@ -176,8 +177,10 @@ public interface TransactionModule {
             @NonNull final HederaOperations hederaOperations,
             @NonNull final HederaEvmBlocks hederaEvmBlocks,
             @NonNull final PendingCreationMetadataRef pendingCreationMetadataRef) {
+        // TODO Glib: hederaOperations.gasPriceInTinybars() is a real gas price
         return new HederaEvmContext(
-                hederaOperations.gasPriceInTinybars(),
+//                hederaOperations.gasPriceInTinybars(),
+                0,
                 false,
                 hederaEvmBlocks,
                 tinybarValues,

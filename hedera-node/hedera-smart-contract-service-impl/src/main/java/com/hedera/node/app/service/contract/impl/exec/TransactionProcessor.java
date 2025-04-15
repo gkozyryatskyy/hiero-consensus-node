@@ -116,6 +116,7 @@ public class TransactionProcessor {
             @NonNull final ActionSidecarContentTracer tracer,
             @NonNull final Configuration config,
             @NonNull final InvolvedParties parties) {
+        //TODO Glib: gas price is coming from the context.gasPrice
         final var gasCharges =
                 gasCharging.chargeForGas(parties.sender(), parties.relayer(), context, updater, transaction);
         final var initialFrame = frameBuilder.buildInitialFrameWith(

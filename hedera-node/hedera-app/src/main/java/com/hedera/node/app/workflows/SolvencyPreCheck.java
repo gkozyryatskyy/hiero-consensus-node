@@ -219,6 +219,7 @@ public class SolvencyPreCheck {
                         + contractCall.gas() * estimatedGasPriceInTinybars(CONTRACT_CALL, consensusTime);
             }
             case ETHEREUM_TRANSACTION -> {
+                //TODO Glib: this should return 0 for 'free' transactions config
                 final var ethTxn = txBody.ethereumTransactionOrThrow();
                 yield ethTxn.maxGasAllowance();
             }

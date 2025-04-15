@@ -43,6 +43,7 @@ import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.INVALID_CONTRA
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.MAX_CHILD_RECORDS_EXCEEDED;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.MAX_GAS_LIMIT_EXCEEDED;
 import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.NEGATIVE_ALLOWANCE_AMOUNT;
+import static com.hederahashgraph.api.proto.java.ResponseCodeEnum.SUCCESS;
 import static com.hederahashgraph.api.proto.java.TokenType.FUNGIBLE_COMMON;
 
 import com.hedera.node.app.hapi.utils.ethereum.EthTxData;
@@ -215,9 +216,31 @@ public class NonceSuite {
                                 .contractCallResult(resultWith().signerNonce(0L))));
     }
 
+    //TODO Glib: test
+    @HapiTest
+    final Stream<DynamicTest> nonceUpdatedGlebTest() {
+        return hapiTest(
+                newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
+                cryptoCreate(RELAYER).balance(0L),
+                cryptoTransfer(tinyBarsFromAccountToAlias(GENESIS, SECP_256K1_SOURCE_KEY, ONE_HBAR)),
+                uploadInitCode(INTERNAL_CALLEE_CONTRACT),
+                contractCreate(INTERNAL_CALLEE_CONTRACT),
+                ethereumCall(INTERNAL_CALLEE_CONTRACT, EXTERNAL_FUNCTION)
+                        .signingWith(SECP_256K1_SOURCE_KEY)
+                        .payingWith(RELAYER)
+                        .nonce(0)
+                        .type(EthTransactionType.EIP1559)
+                        .gasPrice(500)
+                        .maxGasAllowance(0)
+                        .hasKnownStatus(SUCCESS)
+                        .via(TX),
+                getAliasedAccountInfo(SECP_256K1_SOURCE_KEY).has(accountWith().nonce(1L)),
+                getTxnRecord(TX).logged());
+    }
+
     @HapiTest
     final Stream<DynamicTest>
-            nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailed() {
+    nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailed() {
         return hapiTest(
                 newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                 cryptoCreate(RELAYER).balance(ONE_HUNDRED_HBARS),
@@ -242,7 +265,7 @@ public class NonceSuite {
 
     @HapiTest
     final Stream<DynamicTest>
-            nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndGasAllowanceIsLessThanRemainingFeeHandlerCheckFailed() {
+    nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndGasAllowanceIsLessThanRemainingFeeHandlerCheckFailed() {
         return hapiTest(
                 newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                 cryptoCreate(RELAYER).balance(ONE_HUNDRED_HBARS),
@@ -268,7 +291,7 @@ public class NonceSuite {
 
     @HapiTest
     final Stream<DynamicTest>
-            nonceNotUpdatedWhenOfferedGasPriceIsBiggerThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailed() {
+    nonceNotUpdatedWhenOfferedGasPriceIsBiggerThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailed() {
         return hapiTest(
                 newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                 cryptoCreate(RELAYER).balance(ONE_HUNDRED_HBARS),
@@ -369,6 +392,7 @@ public class NonceSuite {
                         .via(TX),
                 getAliasedAccountInfo(SECP_256K1_SOURCE_KEY).has(accountWith().nonce(1L)),
                 getTxnRecord(TX)
+                        .logged()
                         .hasPriority(recordWith()
                                 .status(CONTRACT_REVERT_EXECUTED)
                                 .contractCallResult(resultWith().signerNonce(1L))));
@@ -410,9 +434,9 @@ public class NonceSuite {
                 withOpContext((spec, op) -> allRunFor(
                         spec,
                         ethereumCall(
-                                        INTERNAL_CALLER_CONTRACT,
-                                        TRANSFER_TO_FUNCTION,
-                                        mirrorAddrWith(receiverId.get().getAccountNum()))
+                                INTERNAL_CALLER_CONTRACT,
+                                TRANSFER_TO_FUNCTION,
+                                mirrorAddrWith(receiverId.get().getAccountNum()))
                                 .type(EthTransactionType.EIP1559)
                                 .signingWith(SECP_256K1_SOURCE_KEY)
                                 .payingWith(RELAYER)
@@ -439,9 +463,9 @@ public class NonceSuite {
                 withOpContext((spec, op) -> allRunFor(
                         spec,
                         ethereumCall(
-                                        INTERNAL_CALLER_CONTRACT,
-                                        TRANSFER_TO_FUNCTION,
-                                        mirrorAddrWith(eth0x2.getAccountNum()))
+                                INTERNAL_CALLER_CONTRACT,
+                                TRANSFER_TO_FUNCTION,
+                                mirrorAddrWith(eth0x2.getAccountNum()))
                                 .type(EthTransactionType.EIP1559)
                                 .signingWith(SECP_256K1_SOURCE_KEY)
                                 .payingWith(RELAYER)
@@ -468,9 +492,9 @@ public class NonceSuite {
                 withOpContext((spec, op) -> allRunFor(
                         spec,
                         ethereumCall(
-                                        INTERNAL_CALLER_CONTRACT,
-                                        TRANSFER_TO_FUNCTION,
-                                        mirrorAddrWith(eth0x167.getAccountNum()))
+                                INTERNAL_CALLER_CONTRACT,
+                                TRANSFER_TO_FUNCTION,
+                                mirrorAddrWith(eth0x167.getAccountNum()))
                                 .type(EthTransactionType.EIP1559)
                                 .signingWith(SECP_256K1_SOURCE_KEY)
                                 .payingWith(RELAYER)
@@ -508,13 +532,13 @@ public class NonceSuite {
                 withOpContext((spec, op) -> allRunFor(
                         spec,
                         ethereumCall(
-                                        MANY_CHILDREN_CONTRACT,
-                                        CHECK_BALANCE_REPEATEDLY_FUNCTION,
-                                        asHeadlongAddress(tokenMirrorAddr.get()),
-                                        asHeadlongAddress(treasuryMirrorAddr.get()),
-                                        BigInteger.valueOf(spec.startupProperties()
-                                                        .getInteger("consensus.handle.maxFollowingRecords")
-                                                + 1))
+                                MANY_CHILDREN_CONTRACT,
+                                CHECK_BALANCE_REPEATEDLY_FUNCTION,
+                                asHeadlongAddress(tokenMirrorAddr.get()),
+                                asHeadlongAddress(treasuryMirrorAddr.get()),
+                                BigInteger.valueOf(spec.startupProperties()
+                                        .getInteger("consensus.handle.maxFollowingRecords")
+                                        + 1))
                                 .type(EthTransactionType.EIP1559)
                                 .signingWith(SECP_256K1_SOURCE_KEY)
                                 .payingWith(RELAYER)
@@ -542,9 +566,9 @@ public class NonceSuite {
                 withOpContext((spec, op) -> allRunFor(
                         spec,
                         ethereumCall(
-                                        INTERNAL_CALLER_CONTRACT,
-                                        TRANSFER_TO_FUNCTION,
-                                        mirrorAddrWith(receiverId.get().getAccountNum()))
+                                INTERNAL_CALLER_CONTRACT,
+                                TRANSFER_TO_FUNCTION,
+                                mirrorAddrWith(receiverId.get().getAccountNum()))
                                 .type(EthTransactionType.EIP1559)
                                 .signingWith(SECP_256K1_SOURCE_KEY)
                                 .payingWith(RELAYER)
@@ -600,7 +624,7 @@ public class NonceSuite {
 
     @HapiTest
     final Stream<DynamicTest>
-            nonceNotUpdatedWhenUserOfferedGasPriceAndAllowanceAreZeroHandlerCheckFailedEthContractCreate() {
+    nonceNotUpdatedWhenUserOfferedGasPriceAndAllowanceAreZeroHandlerCheckFailedEthContractCreate() {
         return hapiTest(
                 newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                 cryptoCreate(RELAYER).balance(ONE_MILLION_HBARS),
@@ -625,9 +649,9 @@ public class NonceSuite {
 
     @HapiTest
     final Stream<DynamicTest>
-            nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate() {
+    nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate() {
         return defaultHapiSpec(
-                        "nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate")
+                "nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate")
                 .given(
                         newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                         cryptoCreate(RELAYER).balance(ONE_MILLION_HBARS),
@@ -653,7 +677,7 @@ public class NonceSuite {
 
     @HapiTest
     final Stream<DynamicTest>
-            nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndGasAllowanceIsLessThanRemainingFeeHandlerCheckFailedEthContractCreate() {
+    nonceNotUpdatedWhenOfferedGasPriceIsLessThanCurrentAndGasAllowanceIsLessThanRemainingFeeHandlerCheckFailedEthContractCreate() {
         return hapiTest(
                 newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                 cryptoCreate(RELAYER).balance(ONE_MILLION_HBARS),
@@ -678,9 +702,9 @@ public class NonceSuite {
 
     @HapiTest
     final Stream<DynamicTest>
-            nonceNotUpdatedWhenOfferedGasPriceIsBiggerThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate() {
+    nonceNotUpdatedWhenOfferedGasPriceIsBiggerThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate() {
         return defaultHapiSpec(
-                        "nonceNotUpdatedWhenOfferedGasPriceIsBiggerThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate")
+                "nonceNotUpdatedWhenOfferedGasPriceIsBiggerThanCurrentAndSenderDoesNotHaveEnoughBalanceHandlerCheckFailedEthContractCreate")
                 .given(
                         newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
                         cryptoCreate(RELAYER).balance(ONE_MILLION_HBARS),
@@ -869,9 +893,9 @@ public class NonceSuite {
                 withOpContext((spec, op) -> allRunFor(
                         spec,
                         ethereumCall(
-                                        INTERNAL_CALLER_CONTRACT,
-                                        TRANSFER_TO_FUNCTION,
-                                        mirrorAddrWith(receiverId.get().getAccountNum()))
+                                INTERNAL_CALLER_CONTRACT,
+                                TRANSFER_TO_FUNCTION,
+                                mirrorAddrWith(receiverId.get().getAccountNum()))
                                 .type(EthTransactionType.EIP1559)
                                 .signingWith(SECP_256K1_SOURCE_KEY)
                                 .payingWith(RELAYER)

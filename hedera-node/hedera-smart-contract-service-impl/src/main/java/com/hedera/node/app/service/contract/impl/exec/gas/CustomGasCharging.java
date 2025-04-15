@@ -114,20 +114,22 @@ public class CustomGasCharging {
 
         final var intrinsicGas =
                 gasCalculator.transactionIntrinsicGasCost(transaction.evmPayload(), transaction.isCreate());
-        if (context.isNoopGasContext()) {
-            return new GasCharges(intrinsicGas, 0L);
-        }
         validateTrue(transaction.gasLimit() >= intrinsicGas, INSUFFICIENT_GAS);
         if (transaction.isEthereumTransaction()) {
             requireNonNull(relayer);
-            final var allowanceUsed = chargeWithRelayer(sender, relayer, context, worldUpdater, transaction);
-
+            GasCharges charges;
+            if (context.isNoopGasContext()) {
+                charges = new GasCharges(intrinsicGas, 0L);
+            } else {
+                charges = new GasCharges(intrinsicGas, chargeWithRelayer(sender, relayer, context, worldUpdater, transaction));
+            }
             // Increment nonce right after the gas is charged
             sender.incrementNonce();
-
-            return new GasCharges(intrinsicGas, allowanceUsed);
+            return charges;
         } else {
-            chargeWithOnlySender(sender, context, worldUpdater, transaction);
+            if (!context.isNoopGasContext()) {
+                chargeWithOnlySender(sender, context, worldUpdater, transaction);
+            }
             return new GasCharges(intrinsicGas, 0L);
         }
     }
