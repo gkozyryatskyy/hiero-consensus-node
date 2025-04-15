@@ -4,12 +4,9 @@ module com.swirlds.common {
     /* Exported packages. This list should remain alphabetized. */
     exports com.swirlds.common;
     exports com.swirlds.common.config;
-    exports com.swirlds.common.constructable;
-    exports com.swirlds.common.constructable.internal;
     exports com.swirlds.common.context;
     exports com.swirlds.common.crypto;
     exports com.swirlds.common.crypto.config;
-    exports com.swirlds.common.exceptions;
     exports com.swirlds.common.formatting;
     exports com.swirlds.common.io;
     exports com.swirlds.common.io.config;
@@ -46,15 +43,10 @@ module com.swirlds.common {
     exports com.swirlds.common.platform;
     exports com.swirlds.common.stream;
     exports com.swirlds.common.stream.internal;
-    exports com.swirlds.common.threading;
     exports com.swirlds.common.threading.framework;
     exports com.swirlds.common.threading.framework.config;
-    exports com.swirlds.common.threading.futures;
-    exports com.swirlds.common.threading.locks;
-    exports com.swirlds.common.threading.locks.locked;
     exports com.swirlds.common.threading.manager;
     exports com.swirlds.common.threading.pool;
-    exports com.swirlds.common.threading.utility;
     exports com.swirlds.common.time;
     exports com.swirlds.common.utility;
     exports com.swirlds.common.utility.throttle;
@@ -127,8 +119,6 @@ module com.swirlds.common {
             com.swirlds.platform.test,
             com.swirlds.platform.gui;
     exports com.swirlds.common.startup;
-    exports com.swirlds.common.threading.atomic;
-    exports com.swirlds.common.concurrent;
     exports com.swirlds.common.merkle.synchronization.stats;
 
     requires transitive com.hedera.pbj.runtime;
@@ -137,6 +127,7 @@ module com.swirlds.common {
     requires transitive com.swirlds.logging;
     requires transitive com.swirlds.metrics.api;
     requires transitive com.swirlds.metrics.impl;
+    requires transitive org.hiero.base.concurrent;
     requires transitive org.hiero.base.utility;
     requires transitive org.hiero.consensus.model;
     requires transitive com.fasterxml.jackson.core;
@@ -145,7 +136,6 @@ module com.swirlds.common {
     requires transitive lazysodium.java;
     requires transitive org.apache.logging.log4j;
     requires com.sun.jna;
-    requires io.github.classgraph;
     requires io.prometheus.simpleclient.httpserver;
     requires java.desktop;
     requires jdk.httpserver;

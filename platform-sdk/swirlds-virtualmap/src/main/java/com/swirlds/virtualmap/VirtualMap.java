@@ -4,9 +4,8 @@ package com.swirlds.virtualmap;
 import static com.swirlds.common.io.streams.StreamDebugUtils.deserializeAndDebugOnFailure;
 import static com.swirlds.virtualmap.VirtualMap.CLASS_ID;
 import static java.util.Objects.requireNonNull;
-import static org.hiero.consensus.model.utility.CommonUtils.getNormalisedStringBytes;
+import static org.hiero.base.utility.CommonUtils.getNormalisedStringBytes;
 
-import com.swirlds.common.constructable.ConstructableClass;
 import com.swirlds.common.io.ExternalSelfSerializable;
 import com.swirlds.common.io.streams.MerkleDataInputStream;
 import com.swirlds.common.io.streams.SerializableDataInputStreamImpl;
@@ -18,7 +17,6 @@ import com.swirlds.common.merkle.utility.DebugIterationEndpoint;
 import com.swirlds.common.utility.Labeled;
 import com.swirlds.common.utility.RuntimeObjectRecord;
 import com.swirlds.common.utility.RuntimeObjectRegistry;
-import com.swirlds.common.utility.ValueReference;
 import com.swirlds.config.api.Configuration;
 import com.swirlds.metrics.api.Metrics;
 import com.swirlds.virtualmap.config.VirtualMapConfig;
@@ -38,9 +36,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import org.hiero.consensus.model.constructable.RuntimeConstructable;
-import org.hiero.consensus.model.io.streams.SerializableDataInputStream;
-import org.hiero.consensus.model.io.streams.SerializableDataOutputStream;
+import org.hiero.base.ValueReference;
+import org.hiero.base.constructable.ConstructableClass;
+import org.hiero.base.constructable.RuntimeConstructable;
+import org.hiero.base.io.streams.SerializableDataInputStream;
+import org.hiero.base.io.streams.SerializableDataOutputStream;
 
 /**
  * A {@link MerkleInternal} node that virtualizes all of its children, such that the child nodes
