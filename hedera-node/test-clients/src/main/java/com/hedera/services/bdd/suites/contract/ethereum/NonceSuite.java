@@ -221,7 +221,7 @@ public class NonceSuite {
     final Stream<DynamicTest> nonceUpdatedGlebTest() {
         return hapiTest(
                 newKeyNamed(SECP_256K1_SOURCE_KEY).shape(SECP_256K1_SHAPE),
-                cryptoCreate(RELAYER).balance(0L),
+                cryptoCreate(RELAYER).balance(ONE_HUNDRED_HBARS),
                 cryptoTransfer(tinyBarsFromAccountToAlias(GENESIS, SECP_256K1_SOURCE_KEY, ONE_HBAR)),
                 uploadInitCode(INTERNAL_CALLEE_CONTRACT),
                 contractCreate(INTERNAL_CALLEE_CONTRACT),

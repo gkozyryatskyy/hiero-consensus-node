@@ -42,6 +42,8 @@ public @interface ConfigProperty {
      * This value is used to define the name of the property. the prefix of the property name is defined by the
      * {@link ConfigData} annotation and the suffix is defined by this value while the concrete property name will be
      * {@code PREFIX.SUFFIX}
+     * <p>
+     * If the value is blank, name of the property will be used.
      *
      * @return the suffix of the name
      */

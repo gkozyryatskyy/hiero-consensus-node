@@ -179,8 +179,8 @@ public interface TransactionModule {
             @NonNull final PendingCreationMetadataRef pendingCreationMetadataRef) {
         // TODO Glib: hederaOperations.gasPriceInTinybars() is a real gas price
         return new HederaEvmContext(
-//                hederaOperations.gasPriceInTinybars(),
-                0,
+                hederaOperations.gasPriceInTinybars(),
+//                0,
                 false,
                 hederaEvmBlocks,
                 tinybarValues,
