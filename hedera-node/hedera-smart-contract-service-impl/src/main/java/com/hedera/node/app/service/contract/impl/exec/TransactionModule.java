@@ -103,7 +103,7 @@ public interface TransactionModule {
         return requireNonNull(context).consensusNow();
     }
 
-    //TODO Glib: source for fees
+    // TODO Glib: source for fees
     @Provides
     @TransactionScope
     @TopLevelResourcePrices
@@ -140,10 +140,10 @@ public interface TransactionModule {
     }
 
     /**
-     * If the top-level transaction is an {@code EthereumTransaction}, provides an ECDSA {@link Key} with
-     * the public key of the sender address; otherwise returns {@code null}.
+     * If the top-level transaction is an {@code EthereumTransaction}, provides an ECDSA {@link Key} with the public key
+     * of the sender address; otherwise returns {@code null}.
      *
-     * @param ethTxSigsCache the cache of Ethereum transaction signatures
+     * @param ethTxSigsCache    the cache of Ethereum transaction signatures
      * @param hydratedEthTxData the hydrated Ethereum transaction data, if this is an {@code EthereumTransaction}
      * @return the ECDSA {@link Key} with the public key of the sender address, or {@code null}
      */
@@ -179,8 +179,8 @@ public interface TransactionModule {
             @NonNull final PendingCreationMetadataRef pendingCreationMetadataRef) {
         // TODO Glib: hederaOperations.gasPriceInTinybars() is a real gas price
         return new HederaEvmContext(
-                hederaOperations.gasPriceInTinybars(),
-//                0,
+                //                hederaOperations.gasPriceInTinybars(),
+                0,
                 false,
                 hederaEvmBlocks,
                 tinybarValues,

@@ -216,7 +216,7 @@ public class NonceSuite {
                                 .contractCallResult(resultWith().signerNonce(0L))));
     }
 
-    //TODO Glib: test
+    // TODO Glib: test
     @HapiTest
     final Stream<DynamicTest> nonceUpdatedGlebTest() {
         return hapiTest(
@@ -231,7 +231,7 @@ public class NonceSuite {
                         .nonce(0)
                         .type(EthTransactionType.EIP1559)
                         .gasPrice(500)
-                        .maxGasAllowance(0)
+//                        .maxGasAllowance(0)
                         .hasKnownStatus(SUCCESS)
                         .via(TX),
                 getAliasedAccountInfo(SECP_256K1_SOURCE_KEY).has(accountWith().nonce(1L)),

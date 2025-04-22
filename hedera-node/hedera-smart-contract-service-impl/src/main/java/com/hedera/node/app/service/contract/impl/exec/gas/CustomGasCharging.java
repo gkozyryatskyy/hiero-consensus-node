@@ -121,7 +121,8 @@ public class CustomGasCharging {
             if (context.isNoopGasContext()) {
                 charges = new GasCharges(intrinsicGas, 0L);
             } else {
-                charges = new GasCharges(intrinsicGas, chargeWithRelayer(sender, relayer, context, worldUpdater, transaction));
+                charges = new GasCharges(
+                        intrinsicGas, chargeWithRelayer(sender, relayer, context, worldUpdater, transaction));
             }
             // Increment nonce right after the gas is charged
             sender.incrementNonce();

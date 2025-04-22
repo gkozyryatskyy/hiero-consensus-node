@@ -104,7 +104,7 @@ public record ContractsConfig(
                 Set<Long> callableHTSAddresses,
         @ConfigProperty(value = "evm.ethTransaction.zeroHapiFees.enabled", defaultValue = "true") @NetworkProperty
                 boolean evmEthTransactionZeroHapiFeesEnabled,
-        //TODO Glib: new config
+        // TODO Glib: new config
         @ConfigProperty(value = "evm.ethTransaction.gasPriceOverride.enabled", defaultValue = "false") @NetworkProperty
                 boolean evmEthTransactionGasPriceOverrideEnabled,
         @ConfigProperty(value = "evm.ethTransaction.gasPriceOverride.tinybar", defaultValue = "0") @NetworkProperty
