@@ -214,6 +214,9 @@ public class CustomMessageCallProcessor extends MessageCallProcessor {
         if (frame.getRemainingGas() < gasRequirement) {
             result = PrecompileContractResult.halt(Bytes.EMPTY, Optional.of(INSUFFICIENT_GAS));
         } else {
+            // TODO Glib:
+            System.out.println(
+                    ">>>>>>>>>>>>>>>>>>>>>>" + frame.getContractAddress().getInt(0));
             frame.decrementRemainingGas(gasRequirement);
             incrementHederaGasUsage(frame, gasRequirement);
             result = precompile.computePrecompile(frame.getInputData(), frame);
@@ -254,6 +257,9 @@ public class CustomMessageCallProcessor extends MessageCallProcessor {
             result = PrecompileContractResult.halt(Bytes.EMPTY, Optional.of(INSUFFICIENT_GAS));
         } else {
             if (!fullResult.isRefundGas()) {
+                // TODO Glib:
+                System.out.println(
+                        ">>>>>>>>>>>>>>>>>>>>>>" + frame.getInputData().getInt(0));
                 frame.decrementRemainingGas(gasRequirement);
                 incrementHederaGasUsage(frame, gasRequirement);
             }
